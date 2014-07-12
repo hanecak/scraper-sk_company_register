@@ -80,7 +80,7 @@ def go():
                 r = urllib2.urlopen(url)
                 l = parse_html(r.read())
                 if l:
-                    row = map(lambda x: x.decode('windows-1250').encode('utf8'), l)
+                    row = map(lambda x: x.decode('windows-1250'), l)
                     row.insert(0, n)
                     row.append(url)
 #                    for x in row:
@@ -111,11 +111,11 @@ def go():
                             retry -= 1
                             #sleep(3)
                             print 'Retrying.....'
-            except:
-                print '!!!/\/\/\!!! ERROR !!!/\/\/\!!!'
-                print 'Retrying.....'
-                sleep(3)
-                retry -= 1
+            #except:
+            #    print '!!!/\/\/\!!! ERROR !!!/\/\/\!!!'
+            #    print 'Retrying.....'
+            #    sleep(3)
+            #    retry -= 1
 
 go()
 print "To be continued..."
