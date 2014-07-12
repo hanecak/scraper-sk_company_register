@@ -4,10 +4,10 @@ This script is scraping data from Slovak Business Registry (ORSR: http://www.ors
 
 ## Status
 
-Current motivation for maitaining this script is:
+Current motivation for maintaining this script is:
 
 * keep it going even after ScraperWiki Classic goes down
-* maybe enhance it so that it may complement [Orgaizations dataset from Datanest](http://datanest.fair-play.sk/datasets/1)
+* maybe enhance it so that it may complement [Organizations dataset from Datanest](http://datanest.fair-play.sk/datasets/1)
   * i.e. list also board members, owners, etc.
 
 ## History
