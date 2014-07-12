@@ -58,7 +58,7 @@ def parse_html(html):
 # will be more companies than that. Thus, it would be nice to determined "the
 # end" in some reliable and automatic fashion.
 maxn = 100000
-urls = [ "http://www.orsr.sk/vypis.asp?lan=en&ID=%s&SID=2&P=0" % n for n in range(1,maxn) ]
+urls = [ "http://www.orsr.sk/vypis.asp?lan=en&ID=%s&SID=2&P=0" % n for n in range(1, maxn + 1) ]
 
 def go():
     n = scraperwiki.sqlite.get_var('id')
