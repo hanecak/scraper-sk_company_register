@@ -8,7 +8,7 @@ Current motivation for maitaining this script is:
 
 * keep it going even after ScraperWiki Classic goes down
 * maybe enhance it so that it may complement [Orgaizations dataset from Datanest](http://datanest.fair-play.sk/datasets/1)
-** i.e. list also board members, owners, etc.
+  * i.e. list also board members, owners, etc.
 
 ## History
 
