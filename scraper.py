@@ -89,12 +89,12 @@ def go():
 #                       print "-->", x
                     scraperwiki.sqlite.save(['UniqueID'],
                                             {'UniqueID': row[0],
-                                             'CompanyName': row[1],
-                                             'CompanyAddress': row[2],
-                                             'CompanyNumber': row[3],
-                                             'CompanyFounding': row[4],
-                                             'EntityType': row[5],
-                                             'CompanyCapital': row[6],
+                                             'CompanyName': row[1].strip(),
+                                             'CompanyAddress': row[2].strip(),
+                                             'CompanyNumber': row[3].strip(),
+                                             'CompanyFounding': row[4].strip(),
+                                             'EntityType': row[5].strip(),
+                                             'CompanyCapital': row[6].strip(),
                                              'Status': row[7],
                                              'CompanyManagers': row[8],
                                              'RegistryUrl': row[9]

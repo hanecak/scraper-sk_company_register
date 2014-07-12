@@ -10,6 +10,12 @@ Current motivation for maintaining this script is:
 * maybe enhance it so that it may complement [Organizations dataset from Datanest](http://datanest.fair-play.sk/datasets/1)
   * i.e. list also board members, owners, etc.
 
+## TODO
+
+* maxn is quite arbitrary set manually to 100000 - we need a better way to determine we are at the end, especially for say SID-6, where say 305633 is valid ID
+* SID=2 is "District Court Bratislava I", add implementation also for SID from 3 to 9
+* it seems like HTTP response code 500 is no longer used by ORSR => investigate and update the code
+
 ## History
 
 Scraper was migrated from ScraperWiki Classic (as they are slowly turning the service off):
