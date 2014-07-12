@@ -23,7 +23,6 @@ def extract(t, s):
 
 def parse_html(html):
     s = re.split(r' \(from: .*?\)', strips(html))
-    n = 0
     cname = extract('Business name:', s)
     if cname == 'n/a':
         extract('Business name of the organisational unit:', s)
