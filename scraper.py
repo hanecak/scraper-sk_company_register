@@ -54,27 +54,29 @@ def parse_html(html):
     else:
         return False
 
+# TODO: As of now, this is an arbitrary limit. There will come time when there
+# will be more companies than that. Thus, it would be nice to determined "the
+# end" in some reliable and automatic fashion.
 maxn = 100000
 urls = [ "http://www.orsr.sk/vypis.asp?lan=en&ID=%s&SID=2&P=0" % n for n in range(1,maxn) ]
 
 def go():
     n = scraperwiki.sqlite.get_var('id')
     runs = scraperwiki.sqlite.get_var('runs')
+    if n is None:
+        n = 0
     if runs is None:
         runs = 0
+        scraperwiki.sqlite.save_var('runs', runs)
     if n == maxn:
         n = 0
         scraperwiki.sqlite.save_var('id', n)
-        runs = scraperwiki.sqlite.get_var('runs')
         runs += 1
         scraperwiki.sqlite.save_var('runs', runs)
-    if n is None:
-        n = 0
     for url in urls[n:]:
         retry = 3
+        n += 1
         while retry:
-            if retry == 3:
-                n += 1
             print '### URL (retry:', retry, ') No. ', str(n), url
             try:
                 r = urllib2.urlopen(url)
