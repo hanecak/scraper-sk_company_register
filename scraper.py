@@ -68,7 +68,7 @@ def go():
         scraperwiki.sqlite.save_var('id', n)
         runs = scraperwiki.sqlite.get_var('runs')
         runs += 1
-        scraperwiki.sqlite.save_var('runs', r)
+        scraperwiki.sqlite.save_var('runs', runs)
     if n is None:
         n = 0
     for url in urls[n:]:
