@@ -23,7 +23,6 @@ def extract(t, s):
 
 def parse_html(html):
     s = re.split(r' \(from: .*?\)', strips(html))
-    n = 0
     cname = extract('Business name:', s)
     if cname == 'n/a':
         extract('Business name of the organisational unit:', s)
@@ -55,33 +54,35 @@ def parse_html(html):
     else:
         return False
 
+# TODO: As of now, this is an arbitrary limit. There will come time when there
+# will be more companies than that. Thus, it would be nice to determined "the
+# end" in some reliable and automatic fashion.
 maxn = 100000
-urls = [ "http://www.orsr.sk/vypis.asp?lan=en&ID=%s&SID=2&P=0" % n for n in range(1,maxn) ]
+urls = [ "http://www.orsr.sk/vypis.asp?lan=en&ID=%s&SID=2&P=0" % n for n in range(1, maxn + 1) ]
 
 def go():
     n = scraperwiki.sqlite.get_var('id')
     runs = scraperwiki.sqlite.get_var('runs')
+    if n is None:
+        n = 0
     if runs is None:
         runs = 0
+        scraperwiki.sqlite.save_var('runs', runs)
     if n == maxn:
         n = 0
         scraperwiki.sqlite.save_var('id', n)
-        runs = scraperwiki.sqlite.get_var('runs')
         runs += 1
-        scraperwiki.sqlite.save_var('runs', r)
-    if n is None:
-        n = 0
+        scraperwiki.sqlite.save_var('runs', runs)
     for url in urls[n:]:
         retry = 3
+        n += 1
         while retry:
-            if retry == 3:
-                n += 1
             print '### URL (retry:', retry, ') No. ', str(n), url
             try:
                 r = urllib2.urlopen(url)
                 l = parse_html(r.read())
                 if l:
-                    row = map(lambda x: x.decode('windows-1250').encode('utf8'), l)
+                    row = map(lambda x: x.decode('windows-1250'), l)
                     row.insert(0, n)
                     row.append(url)
 #                    for x in row:
@@ -112,11 +113,11 @@ def go():
                             retry -= 1
                             #sleep(3)
                             print 'Retrying.....'
-            except:
-                print '!!!/\/\/\!!! ERROR !!!/\/\/\!!!'
-                print 'Retrying.....'
-                sleep(3)
-                retry -= 1
+            #except:
+            #    print '!!!/\/\/\!!! ERROR !!!/\/\/\!!!'
+            #    print 'Retrying.....'
+            #    sleep(3)
+            #    retry -= 1
 
 go()
 print "To be continued..."

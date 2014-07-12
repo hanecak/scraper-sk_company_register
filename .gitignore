@@ -2,3 +2,5 @@
 data.sqlite
 .pydevproject
 .project
+.settings
+/scraperwiki.sqlite
