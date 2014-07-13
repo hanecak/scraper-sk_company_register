@@ -2,6 +2,21 @@
 
 This script is scraping data from Slovak Business Registry (ORSR: http://www.orsr.sk/).
 
+## Data
+
+Data uses English language as employed by ORSR and should be quite straightforward to understand with the only exception of CourtSID.
+
+### CourtSID
+
+* 2: District Court Bratislava I
+* 3: District Court Banská Bystrica
+* 4: District Court Košice I
+* 5: District Court Nitra
+* 6: District Court Prešov
+* 7: District Court Trenčín
+* 8: District Court Trnava
+* 9: District Court Žilina
+
 ## Status
 
 Current motivation for maintaining this script is:
