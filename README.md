@@ -12,8 +12,7 @@ Current motivation for maintaining this script is:
 
 ## TODO
 
-* maxn is quite arbitrary set manually to 100000 - we need a better way to determine we are at the end, especially for say SID-6, where say 305633 is valid ID
-* it seems like HTTP response code 500 is no longer used by ORSR => investigate and update the code
+* maxn is quite arbitrary set manually to 400000 with max_id_hole = 250 => investigate whether that's enough, i.e. wa can wait until it finishes as is and then make thos number higher and see what new was harvested
 
 ## History
 
