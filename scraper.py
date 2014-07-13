@@ -27,12 +27,6 @@ def parse_html(html):
     if cname == 'n/a':
         extract('Business name of the organisational unit:', s)
     if len(cname) > 3:
-        # TODO: there are other variations of this + we do not want to "invalidate" the official data => remove this
-        # used in SID=2
-        #cname.replace('- v likvidÃ¡cii', '')
-        # user in SID=3
-        #cname.replace(' " v likvidÃ¡cii"', '')
-        
         caddress = extract('Registered seat:', s)
         if caddress == 'n/a':
             caddress = extract('Place of business', s)
@@ -89,20 +83,6 @@ def go():
     if runs is None:
         runs = 0
     
-    # TODO: clean-up
-    #if n == maxn:
-    #    n = 0
-    #    scraperwiki.sqlite.save_var('id', n)
-    #    court += 1
-    #    scraperwiki.sqlite.save_var('court', court)
-    #if court == (len(court_list) - 1):
-    #    n = 0
-    #    scraperwiki.sqlite.save_var('id', n)
-    #    court = 0
-    #    scraperwiki.sqlite.save_var('court', court)
-    #    runs += 1
-    #    scraperwiki.sqlite.save_var('runs', runs)
-
     while court < len(court_list):
         url_template = 'http://www.orsr.sk/vypis.asp?lan=en&ID=%s&SID=' + str(court_list[court][0]) + '&P=0'
         urls = [ url_template % m for m in range(1, maxn + 1) ]
