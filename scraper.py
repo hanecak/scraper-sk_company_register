@@ -161,6 +161,7 @@ def go():
                         scraperwiki.sqlite.save_var('id', n)
                     
                     retry = 0
+                    sleep(0.1)
                 
                 except urllib2.URLError as e:
                     print '!!!/\/\/\!!! ERROR %s !!!/\/\/\!!!' % e
@@ -172,7 +173,7 @@ def go():
                         retry = 0 # 500 means bad ID, so don't even retry
                     else:
                         retry -= 1
-                            #sleep(3)
+                        sleep(3)
                     print 'Retrying.....'
                 #except:
                 #    print '!!!/\/\/\!!! ERROR !!!/\/\/\!!!'
