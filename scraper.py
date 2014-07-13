@@ -23,6 +23,13 @@ def extract(t, s):
 
 def parse_html(html):
     s = re.split(r' \(from: .*?\)', strips(html))
+    # It seems that at some point in the past, ORSR was sending HTTP response
+    # 500 for non-existent IDs. But now it does not. Instead, it sends page with
+    # just header and footer.
+    if len(s) <= 1:
+        # skip non-existent ID
+        return False
+    
     cname = extract('Business name:', s)
     if cname == 'n/a':
         extract('Business name of the organisational unit:', s)
@@ -71,8 +78,14 @@ court_list = [
 # will be more companies than that. Thus, it would be nice to determined "the
 # end" in some reliable and automatic fashion.
 maxn = 400000
+# To skip scanning few hundred thousands of empty pages uselessly, we stop
+# scraping pages for a particular court after certain amount of successive IDs d
+# not exist. Values observed on small test data were around 40, so hopefully 250
+# is good value.
+max_id_hole = 250
 
 def go():
+    current_id_hole = 0
     n = scraperwiki.sqlite.get_var('id')
     court = scraperwiki.sqlite.get_var('court')
     runs = scraperwiki.sqlite.get_var('runs')
@@ -100,6 +113,8 @@ def go():
                     r = urllib2.urlopen(url)
                     l = parse_html(r.read())
                     if l:
+                        current_id_hole = 0
+                        
                         row = map(lambda x: x.decode('windows-1250'), l)
 
                         # As IDs are duplicated between courts (i.e. ID=1 with
@@ -140,6 +155,10 @@ def go():
                                              'CourtSID': row[10]
                                              })
                         scraperwiki.sqlite.save_var('id', n)
+                    else:
+                        current_id_hole += 1
+                        if current_id_hole >= max_id_hole:
+                            print 'Ending work for court SID=%d after encountering %d non-existent IDs' % (court_list[court][0], current_id_hole)
                     
                     retry = 0
                     sleep(0.1)
