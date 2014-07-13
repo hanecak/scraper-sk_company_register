@@ -13,7 +13,6 @@ Current motivation for maintaining this script is:
 ## TODO
 
 * maxn is quite arbitrary set manually to 100000 - we need a better way to determine we are at the end, especially for say SID-6, where say 305633 is valid ID
-* SID=2 is "District Court Bratislava I", add implementation also for SID from 3 to 9
 * it seems like HTTP response code 500 is no longer used by ORSR => investigate and update the code
 
 ## History
