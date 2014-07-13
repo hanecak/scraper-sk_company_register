@@ -82,6 +82,7 @@ def go():
         court = 0
     if runs is None:
         runs = 0
+    print '### starting work with n = %s and court = %d, runs so far: %s' % (n, court, runs)
     
     while court < len(court_list):
         url_template = 'http://www.orsr.sk/vypis.asp?lan=en&ID=%s&SID=' + str(court_list[court][0]) + '&P=0'
