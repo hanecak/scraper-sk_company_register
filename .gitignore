@@ -4,3 +4,4 @@ data.sqlite
 .project
 .settings
 /scraperwiki.sqlite
+/scraperwiki.sqlite-journal
