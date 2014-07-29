@@ -131,6 +131,7 @@ def go():
                 current_id_hole += 1
                 if current_id_hole >= max_id_hole:
                     print 'Ending work for court SID=%d after encountering %d non-existent IDs' % (court_list[court][0], current_id_hole)
+                    break
                 continue
 
             current_id_hole = 0
