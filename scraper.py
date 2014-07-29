@@ -104,11 +104,13 @@ def go():
         for url in urls[n:]:
             retry = 3
             n += 1
+            l = None
             while retry:
                 print '### URL (retry:', retry, ') No. ', str(n), url
                 try:
                     r = urllib2.urlopen(url)
                     l = parse_html(r.read())
+                    break
                 except Exception as e:
                     print '!!!/\/\/\!!! ERROR %s !!!/\/\/\!!!' % e
                     try:
@@ -122,57 +124,57 @@ def go():
                         sleep(3)
                     print 'Retrying.....'
 
-                if l:
-                    current_id_hole = 0
+            # we want to sleep before fetching another url, because of timeouts
+            sleep(0.1)
 
-                    row = map(lambda x: x.decode('windows-1250'), l)
+            if not l:
+                current_id_hole += 1
+                if current_id_hole >= max_id_hole:
+                    print 'Ending work for court SID=%d after encountering %d non-existent IDs' % (court_list[court][0], current_id_hole)
+                continue
 
-                    # As IDs are duplicated between courts (i.e. ID=1 with
-                    # SID=2 is different company than ID=1 for SID=3), we
-                    # need to construct unique ID from both ID and SID:
-                    company_id = (court_list[court][0] << 32) | n
-                    row.insert(0, company_id)
+            current_id_hole = 0
 
-                    row.append(url)
-                    row.append(court_list[court][0])
-                    #for x in row:
-                    #    print "-->", x
+            row = map(lambda x: x.decode('windows-1250'), l)
 
-                    # sanity check: We are not sure whether same ID is
-                    # reused by courts (i.e. whether same ID but different
-                    # SID means two different companies) => so, here we
-                    # check for duplicates.
-                    if court != 0:
-                        # for court = 0 this might be the first run, thus
-                        # 'swdata' may not exist yet thus query may fail
-                        stored_court = scraperwiki.sqlite.select("CourtSID FROM swdata WHERE UniqueID = %s" % row[0])
-                        if len(stored_court) > 0 and stored_court[0]['CourtSID'] != row[10]:
-                            print "*** duplicate ID detected: 0x%08X" % row[0]
-                            print "*** stored court: '%s', court: '%s'" % (stored_court[0]['CourtSID'], row[10])
-                            return
+            # As IDs are duplicated between courts (i.e. ID=1 with
+            # SID=2 is different company than ID=1 for SID=3), we
+            # need to construct unique ID from both ID and SID:
+            company_id = (court_list[court][0] << 32) | n
+            row.insert(0, company_id)
 
-                    scraperwiki.sqlite.save(['UniqueID'],
-                                        {'UniqueID': row[0],
-                                         'CompanyName': row[1].strip(),
-                                         'CompanyAddress': row[2].strip(),
-                                         'CompanyNumber': row[3].strip(),
-                                         'CompanyFounding': row[4].strip(),
-                                         'EntityType': row[5].strip(),
-                                         'CompanyCapital': row[6].strip(),
-                                         'Status': row[7],
-                                         'CompanyManagers': row[8],
-                                         'RegistryUrl': row[9],
-                                         'CourtSID': row[10]
-                                         })
-                    scraperwiki.sqlite.save_var('id', n)
-                else:
-                    current_id_hole += 1
-                    if current_id_hole >= max_id_hole:
-                        print 'Ending work for court SID=%d after encountering %d non-existent IDs' % (court_list[court][0], current_id_hole)
+            row.append(url)
+            row.append(court_list[court][0])
+            #for x in row:
+            #    print "-->", x
 
-                retry = 0
-                sleep(0.1)
+            # sanity check: We are not sure whether same ID is
+            # reused by courts (i.e. whether same ID but different
+            # SID means two different companies) => so, here we
+            # check for duplicates.
+            if court != 0:
+                # for court = 0 this might be the first run, thus
+                # 'swdata' may not exist yet thus query may fail
+                stored_court = scraperwiki.sqlite.select("CourtSID FROM swdata WHERE UniqueID = %s" % row[0])
+                if len(stored_court) > 0 and stored_court[0]['CourtSID'] != row[10]:
+                    print "*** duplicate ID detected: 0x%08X" % row[0]
+                    print "*** stored court: '%s', court: '%s'" % (stored_court[0]['CourtSID'], row[10])
+                    return
 
+            scraperwiki.sqlite.save(['UniqueID'],
+                                {'UniqueID': row[0],
+                                 'CompanyName': row[1].strip(),
+                                 'CompanyAddress': row[2].strip(),
+                                 'CompanyNumber': row[3].strip(),
+                                 'CompanyFounding': row[4].strip(),
+                                 'EntityType': row[5].strip(),
+                                 'CompanyCapital': row[6].strip(),
+                                 'Status': row[7],
+                                 'CompanyManagers': row[8],
+                                 'RegistryUrl': row[9],
+                                 'CourtSID': row[10]
+                                 })
+            scraperwiki.sqlite.save_var('id', n)
 
         print "All URLs for \"%s\" iterated ..." % court_list[court][1]
         n = 0
