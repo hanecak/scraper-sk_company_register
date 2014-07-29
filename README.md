@@ -39,4 +39,4 @@ https://classic.scraperwiki.com/scrapers/sk_company_numbers/
 
 to Morph.io (who for now seems a good successor for ScraperWiki):
 
-https://morph.io/hanecak/scraper-sk_company_register
+https://morph.io/soit-sk/scraper-sk_company_register
