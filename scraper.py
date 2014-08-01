@@ -104,58 +104,14 @@ def go():
         for url in urls[n:]:
             retry = 3
             n += 1
+            l = None
             while retry:
-                #if (n % 3) == 0:
-                #    print 'XXX simulated crash'
-                #    return
                 print '### URL (retry:', retry, ') No. ', str(n), url
                 try:
                     r = urllib2.urlopen(url)
                     l = parse_html(r.read())
-                    if l:
-                        current_id_hole = 0
-                        
-                        row = map(lambda x: x.decode('windows-1250'), l)
-
-                        # As IDs are duplicated between courts (i.e. ID=1 with
-                        # SID=2 is different company than ID=1 for SID=3), we
-                        # need to construct unique ID from both ID and SID:
-                        company_id = (court_list[court][0] << 32) | n
-                        row.insert(0, company_id)
-                        # TODO: Consider using more readable ID. But that would
-                        # require also migration of old IDs into new IDs (or
-                        # drop of currently harvested data, that would hurt
-                        # given the amount of data and speed of scraping).
-                        # See https://github.com/soit-sk/scraper-sk_company_register/issues/2#issuecomment-50864084
-                        
-                        row.append(url)
-                        row.append(court_list[court][0])
-                        #for x in row:
-                        #    print "-->", x
-                        
-                        scraperwiki.sqlite.save(['UniqueID'],
-                                            {'UniqueID': row[0],
-                                             'CompanyName': row[1].strip(),
-                                             'CompanyAddress': row[2].strip(),
-                                             'CompanyNumber': row[3].strip(),
-                                             'CompanyFounding': row[4].strip(),
-                                             'EntityType': row[5].strip(),
-                                             'CompanyCapital': row[6].strip(),
-                                             'Status': row[7],
-                                             'CompanyManagers': row[8],
-                                             'RegistryUrl': row[9],
-                                             'CourtSID': row[10]
-                                             })
-                        scraperwiki.sqlite.save_var('id', n)
-                    else:
-                        current_id_hole += 1
-                        if current_id_hole >= max_id_hole:
-                            print 'Ending work for court SID=%d after encountering %d non-existent IDs' % (court_list[court][0], current_id_hole)
-                    
-                    retry = 0
-                    sleep(0.1)
-                
-                except urllib2.URLError as e:
+                    break
+                except Exception as e:
                     print '!!!/\/\/\!!! ERROR %s !!!/\/\/\!!!' % e
                     try:
                         code = e.code
@@ -167,11 +123,51 @@ def go():
                         retry -= 1
                         sleep(3)
                     print 'Retrying.....'
-                #except:
-                #    print '!!!/\/\/\!!! ERROR !!!/\/\/\!!!'
-                #    print 'Retrying.....'
-                #    sleep(3)
-                #    retry -= 1
+
+            # we want to sleep before fetching another url, because of timeouts
+            sleep(0.1)
+
+            if not l:
+                current_id_hole += 1
+                if current_id_hole >= max_id_hole:
+                    print 'Ending work for court SID=%d after encountering %d non-existent IDs' % (court_list[court][0], current_id_hole)
+                    break
+                continue
+
+            current_id_hole = 0
+
+            row = map(lambda x: x.decode('windows-1250'), l)
+
+            # As IDs are duplicated between courts (i.e. ID=1 with
+            # SID=2 is different company than ID=1 for SID=3), we
+            # need to construct unique ID from both ID and SID:
+            company_id = (court_list[court][0] << 32) | n
+            row.insert(0, company_id)
+            # TODO: Consider using more readable ID. But that would
+            # require also migration of old IDs into new IDs (or
+            # drop of currently harvested data, that would hurt
+            # given the amount of data and speed of scraping).
+            # See https://github.com/soit-sk/scraper-sk_company_register/issues/2#issuecomment-50864084
+
+            row.append(url)
+            row.append(court_list[court][0])
+            #for x in row:
+            #    print "-->", x
+
+            scraperwiki.sqlite.save(['UniqueID'],
+                                {'UniqueID': row[0],
+                                 'CompanyName': row[1].strip(),
+                                 'CompanyAddress': row[2].strip(),
+                                 'CompanyNumber': row[3].strip(),
+                                 'CompanyFounding': row[4].strip(),
+                                 'EntityType': row[5].strip(),
+                                 'CompanyCapital': row[6].strip(),
+                                 'Status': row[7],
+                                 'CompanyManagers': row[8],
+                                 'RegistryUrl': row[9],
+                                 'CourtSID': row[10]
+                                 })
+            scraperwiki.sqlite.save_var('id', n)
 
         print "All URLs for \"%s\" iterated ..." % court_list[court][1]
         n = 0
