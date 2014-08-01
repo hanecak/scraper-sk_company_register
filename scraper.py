@@ -122,24 +122,16 @@ def go():
                         # need to construct unique ID from both ID and SID:
                         company_id = (court_list[court][0] << 32) | n
                         row.insert(0, company_id)
+                        # TODO: Consider using more readable ID. But that would
+                        # require also migration of old IDs into new IDs (or
+                        # drop of currently harvested data, that would hurt
+                        # given the amount of data and speed of scraping).
+                        # See https://github.com/soit-sk/scraper-sk_company_register/issues/2#issuecomment-50864084
                         
                         row.append(url)
                         row.append(court_list[court][0])
                         #for x in row:
                         #    print "-->", x
-                        
-                        # sanity check: We are not sure whether same ID is
-                        # reused by courts (i.e. whether same ID but different
-                        # SID means two different companies) => so, here we
-                        # check for duplicates.
-                        if court != 0:
-                            # for court = 0 this might be the first run, thus
-                            # 'swdata' may not exist yet thus query may fail
-                            stored_court = scraperwiki.sqlite.select("CourtSID FROM swdata WHERE UniqueID = %s" % row[0])
-                            if len(stored_court) > 0 and stored_court[0]['CourtSID'] != row[10]:
-                                print "*** duplicate ID detected: 0x%08X" % row[0]
-                                print "*** stored court: '%s', court: '%s'" % (stored_court[0]['CourtSID'], row[10])
-                                return
                         
                         scraperwiki.sqlite.save(['UniqueID'],
                                             {'UniqueID': row[0],
