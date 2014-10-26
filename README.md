@@ -27,7 +27,6 @@ Current motivation for maintaining this script is:
 
 ## TODO
 
-* maxn is quite arbitrary set manually to 400000 with max_id_hole = 250 => investigate whether that's enough, i.e. we can wait until it finishes as is and then make those number higher and see what new was harvested
 * stop scraping at midnight + we can then turn on "autorun" (daily) on Morph.io
 
 ## History
@@ -39,4 +38,4 @@ https://classic.scraperwiki.com/scrapers/sk_company_numbers/
 
 to Morph.io (who for now seems a good successor for ScraperWiki):
 
-https://morph.io/hanecak/scraper-sk_company_register
+https://morph.io/soit-sk/scraper-sk_company_register

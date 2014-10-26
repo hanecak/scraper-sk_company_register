@@ -2,9 +2,10 @@
 # -*- coding: utf-8 -*-
 import scraperwiki                                                                    
 import urllib2
-from time import sleep
+import time
 from string import join
 import re
+import sys
 
 def strips(s):
     "strip('<p>foo bar&nbsp;</p>' => foo bar baz"
@@ -84,7 +85,15 @@ maxn = 400000
 # is good value.
 max_id_hole = 250
 
+# If true, scraper will run only for 20 hours at most. Usefull to check
+# "auto run" on Morph.io ("Automatically run this scraper once per day").
+# Can be disabled via command line with --no-time-limit .
+time_limited_run = True
+time_limit = 20 * 60 * 60
+
 def go():
+    start_time = time.time()
+    
     current_id_hole = 0
     n = scraperwiki.sqlite.get_var('id')
     court = scraperwiki.sqlite.get_var('court')
@@ -121,11 +130,11 @@ def go():
                         retry = 0 # 500 means bad ID, so don't even retry
                     else:
                         retry -= 1
-                        sleep(3)
+                        time.sleep(3)
                     print 'Retrying.....'
 
             # we want to sleep before fetching another url, because of timeouts
-            sleep(0.1)
+            time.sleep(0.1)
 
             if not l:
                 current_id_hole += 1
@@ -168,6 +177,11 @@ def go():
                                  'CourtSID': row[10]
                                  })
             scraperwiki.sqlite.save_var('id', n)
+            
+            current_time = time.time()
+            if time_limited_run and (current_time - start_time) >= time_limit:
+                print 'Time limit reached (%d s)...' % time_limit
+                return
 
         print "All URLs for \"%s\" iterated ..." % court_list[court][1]
         n = 0
@@ -183,5 +197,14 @@ def go():
     scraperwiki.sqlite.save_var('runs', runs)
 
 
+# process command line arguments
+for arg in sys.argv[1:]:
+    if (arg == '--no-time-limit'):
+        time_limited_run = False
+    else:
+        print 'invalif argument'
+        sys.exit(1)
+
+# run
 go()
 print "All seems to be done"
