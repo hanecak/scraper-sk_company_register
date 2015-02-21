@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+import argparse
 import scraperwiki                                                                    
 import urllib2
 import time
@@ -91,6 +92,11 @@ max_id_hole = 250
 time_limited_run = True
 time_limit = 20 * 60 * 60
 
+# By default, do not show progress information (seems like lots of output is
+# causing problems when run on Morph.io).  Use --verbose to get the status
+# output.
+be_verbose = False
+
 def go():
     start_time = time.time()
     
@@ -115,7 +121,8 @@ def go():
             n += 1
             l = None
             while retry:
-                print '### URL (retry:', retry, ') No. ', str(n), url
+                if be_verbose:
+                    print '### URL (retry:', retry, ') No. ', str(n), url
                 try:
                     r = urllib2.urlopen(url)
                     l = parse_html(r.read())
@@ -198,12 +205,20 @@ def go():
 
 
 # process command line arguments
-for arg in sys.argv[1:]:
-    if (arg == '--no-time-limit'):
-        time_limited_run = False
-    else:
-        print 'invalif argument'
-        sys.exit(1)
+parser = argparse.ArgumentParser()
+parser.add_argument("--no-time-limit",
+    help="disable time limit, i.e. run until finished or interrupted",
+    action="store_true")
+parser.add_argument("--verbose",
+    help="increase output verbosity",
+    action="store_true")
+args = parser.parse_args()
+
+if args.no_time_limit:
+    time_limited_run = False
+if args.verbose:
+    be_verbose = True
+
 
 # run
 go()
