@@ -27,7 +27,7 @@ Current motivation for maintaining this script is:
 
 ## TODO
 
-* stop scraping at midnight + we can then turn on "autorun" (daily) on Morph.io
+* separate people into dedicated table (issue #1)
 
 ## History
 
