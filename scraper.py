@@ -137,7 +137,8 @@ def go():
                         retry = 0 # 500 means bad ID, so don't even retry
                     else:
                         retry -= 1
-                        time.sleep(3)
+                    
+                    time.sleep(3)
                     print 'Retrying.....'
 
             # we want to sleep before fetching another url, because of timeouts
