@@ -89,8 +89,11 @@ max_id_hole = 250
 # If true, scraper will run only for 20 hours at most. Usefull to check
 # "auto run" on Morph.io ("Automatically run this scraper once per day").
 # Can be disabled via command line with --no-time-limit .
+# Note: With value of 20h, scrapper is stalling while running on Morph.io
+# (errors like "Morph internal error: read timeout reached Stopping current
+# container and requeueing").  Thus I'm trying to lower thew run time to 4h.
 time_limited_run = True
-time_limit = 20 * 60 * 60
+time_limit = 4 * 60 * 60
 
 # By default, do not show progress information (seems like lots of output is
 # causing problems when run on Morph.io).  Use --verbose to get the status
