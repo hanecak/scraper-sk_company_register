@@ -187,7 +187,8 @@ def go():
                                  'Status': row[7],
                                  'CompanyManagers': row[8],
                                  'RegistryUrl': row[9],
-                                 'CourtSID': row[10]
+                                 'CourtSID': row[10],
+                                 'ScrapTime': datetime.datetime.utcnow().replace(microsecond=0).isoformat()
                                  })
             scraperwiki.sqlite.save_var('id', n)
             
