@@ -14,15 +14,19 @@ def strips(s):
     ee = re.compile(r'\s+|&nbsp;')
     return ee.sub(' ', e.sub('', s))
 
+def orsr_date2iso(s):
+    """Convert date format used on ORSR (ex. 12/31/2015) to ISO format (2015-12-31)"""
+    tmp = s.split('/')
+    s = tmp[2] + '-' + tmp[0] + '-' + tmp[1]
+    return s
+
 def extract_dbupdate(s):
     """Extract 'Date of updating data in databases' and return it in ISO format."""
     s = filter(lambda x: 'Date of updating data in databases' in x, s)
     if s:
         s = re.split(':', s[0])[1]
         s = s[0:s.find(' Date of extract')].strip()
-        tmp = s.split('/')
-        s = tmp[2] + '-' + tmp[1] + '-' + tmp[0]
-        return s
+        return orsr_date2iso(s)
     else:
         return 'n/a'
 
@@ -52,7 +56,7 @@ def parse_html(html):
         if caddress == 'n/a':
             caddress = extract('Place of business', s)
         cnumber = extract(r'Identification number', s)
-        cfounding = extract('Date of entry', s)
+        cfounding = orsr_date2iso(extract('Date of entry', s).strip())
         ctype = extract('Legal form:', s)
         ccapital = extract('Registered capital:', s)
         if ccapital == 'n/a':
