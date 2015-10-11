@@ -14,6 +14,18 @@ def strips(s):
     ee = re.compile(r'\s+|&nbsp;')
     return ee.sub(' ', e.sub('', s))
 
+def extractdbupdate(s):
+    """Extract 'Date of updating data in databases' and return it in ISO format."""
+    s = filter(lambda x: 'Date of updating data in databases' in x, s)
+    if s:
+        s = re.split(':', s[0])[1]
+        s = s[0:s.find(' Date of extract')].strip()
+        tmp = s.split('/')
+        s = tmp[2] + '-' + tmp[1] + '-' + tmp[0]
+        return s
+    else:
+        return 'n/a'
+
 def extract(t, s):
     """s = ['Identification number wfefwe: 31 382 266', 'Business name: foo bar baz', ...]
     extract('Identification number', s) => 31 382 266"""
@@ -61,7 +73,8 @@ def parse_html(html):
         if 'JUSTICE' in persons:
             persons = 'n/a'
         cpersons = persons.strip(' ;').replace('    ', '; ')
-        return [cname, caddress, cnumber, cfounding, ctype, ccapital, cstatus, cpersons]
+        dbupdate = extractdbupdate(s)
+        return [cname, caddress, cnumber, cfounding, ctype, ccapital, cstatus, cpersons, dbupdate]
     else:
         return False
 
@@ -187,8 +200,9 @@ def go():
                                  'CompanyCapital': row[6].strip(),
                                  'Status': row[7],
                                  'CompanyManagers': row[8],
-                                 'RegistryUrl': row[9],
-                                 'CourtSID': row[10],
+                                 'DbUpdateDate': row[9],
+                                 'RegistryUrl': row[10],
+                                 'CourtSID': row[11],
                                  'ScrapTime': datetime.datetime.utcnow().replace(microsecond=0).isoformat()
                                  })
             scraperwiki.sqlite.save_var('id', n)
