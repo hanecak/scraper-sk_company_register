@@ -6,7 +6,6 @@ import urllib2
 import time
 from string import join
 import re
-import sys
 
 def strips(s):
     "strip('<p>foo bar&nbsp;</p>' => foo bar baz"
