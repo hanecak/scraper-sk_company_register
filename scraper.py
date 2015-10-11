@@ -51,7 +51,10 @@ def parse_html(html):
         persons = ''
         if ctype != 'Self-employed individual':
             ss = join(s, sep=" ")
-            persons = ss[ss.find('Management body:')+17:ss.find('Acting:')]
+            aindex = ss.find('Acting:')
+            if aindex < 0:
+                aindex = ss.find('Acting in the name of the company')
+            persons = ss[ss.find('Management body:')+17:aindex]
         else:
             persons = re.sub('-.*','', cname)
         if 'JUSTICE' in persons:
