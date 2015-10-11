@@ -95,7 +95,7 @@ max_id_hole = 250
 # (errors like "Morph internal error: read timeout reached Stopping current
 # container and requeueing").  Thus I'm trying to lower thew run time to 4h.
 time_limited_run = True
-time_limit = 2 * 60 * 60
+time_limit = 3 * 60 * 60
 
 # By default, do not show progress information (seems like lots of output is
 # causing problems when run on Morph.io).  Use --verbose to get the status
