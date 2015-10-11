@@ -14,7 +14,7 @@ def strips(s):
     ee = re.compile(r'\s+|&nbsp;')
     return ee.sub(' ', e.sub('', s))
 
-def extractdbupdate(s):
+def extract_dbupdate(s):
     """Extract 'Date of updating data in databases' and return it in ISO format."""
     s = filter(lambda x: 'Date of updating data in databases' in x, s)
     if s:
@@ -73,7 +73,7 @@ def parse_html(html):
         if 'JUSTICE' in persons:
             persons = 'n/a'
         cpersons = persons.strip(' ;').replace('    ', '; ')
-        dbupdate = extractdbupdate(s)
+        dbupdate = extract_dbupdate(s)
         return [cname, caddress, cnumber, cfounding, ctype, ccapital, cstatus, cpersons, dbupdate]
     else:
         return False
