@@ -3,6 +3,7 @@
 import argparse
 import scraperwiki                                                                    
 import urllib2
+import datetime
 import time
 from string import join
 import re
