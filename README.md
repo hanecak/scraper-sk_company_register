@@ -27,7 +27,7 @@ Current motivation for maintaining this script is:
 
 ## TODO
 
-* separate people into dedicated table (issue #1)
+* separate people into dedicated table (issue #3)
 
 ## History
 
