@@ -246,6 +246,33 @@ if args.verbose:
     be_verbose = True
 
 
+def db_update_1to2():
+    """Update DB from version 1 to version 2."""
+    print "Migrating DB from v1 to v2 ..."
+    
+    # CompanyFounding format changed from that used by ORSR to ISO => migrate existing values
+    dates = scraperwiki.sqlite.select("UniqueID, CompanyFounding FROM data WHERE CompanyFounding LIKE '%/%/%'")
+    if len(dates) > 0:
+        for item in dates:
+            iso_date = orsr_date2iso(item['CompanyFounding'])
+            scraperwiki.sqlite.execute("UPDATE data SET CompanyFounding = ? WHERE UniqueID = ?", [ iso_date, item['UniqueID'] ])
+    
+    # done, so bump the DB version
+    scraperwiki.sqlite.save_var('db_ver', 2)
+    return 2
+
+def db_update():
+    """Determine version of database and if older, migrate to current version."""
+    
+    dbver = scraperwiki.sqlite.get_var('db_ver')
+    if dbver is None:
+        dbver = 0
+    
+    if dbver == 0:
+        dbver = db_update_1to2()
+
+
 # run
+db_update()
 go()
 print "All seems to be done"
