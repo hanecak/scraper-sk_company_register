@@ -27,6 +27,8 @@ Current motivation for maintaining this script is:
 
 ## TODO
 
+* detect changes of actual content and put last modification into new column `last_modified`
+  * users can then use Morph.io APi functions to get updates more easily
 * separate people into dedicated table (issue #3)
 
 ## History
