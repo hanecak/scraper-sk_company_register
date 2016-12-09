@@ -131,7 +131,7 @@ def go():
                     l = parse_html(r.read())
                     break
                 except Exception as e:
-                    print '!!!/\/\/\!!! ERROR %s !!!/\/\/\!!!' % e
+                    print '!!!/\/\/\!!! ERROR %s (url: %s) !!!/\/\/\!!!' % (e, url)
                     try:
                         code = e.code
                     except:
