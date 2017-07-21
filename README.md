@@ -2,6 +2,11 @@
 
 This script is scraping data from Slovak Business Registry (ORSR: http://www.orsr.sk/).
 
+Script is no longer being maintained given that there is much better source
+for this data vailable at
+[Ekosystem.Slovensko.Digital](https://ekosystem.slovensko.digital/). Plus,
+ORSR itself is being replaced by [RPO](https://rpo.statistics.sk/rpo/).
+
 ## Data
 
 Data uses English language as employed by ORSR and should be quite straightforward to understand with the only exception of CourtSID.
